@@ -1,0 +1,146 @@
+/* styles.css */
+
+:root {
+    --primary-color: #EBEBF6;
+    --secondary-color: #041C2C;
+    --hover-color: white;
+}
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 20rem;
+    color: var(--secondary-color);
+    padding: 1rem 1rem;
+    background-color: var(--primary-color);
+    transition: width 0.5s ease;
+}
+
+.sidebar.collapsed {
+    width: 4rem;
+    overflow-x: hidden;
+}
+.black-horizontal-line {
+    border-top: 2px solid #000000;
+    width: 100%;
+    margin-top: 10px; 
+    margin-bottom: 10px; 
+}
+
+.content{
+    padding-top: 1rem;
+    overflow-y: hidden;
+}
+
+.sidebar-button {
+    background-color: #2151FF;
+    color: white;
+    border: none;
+    padding: 10px;
+    width:12rem;
+}
+
+.sidebar-button:hover {
+    background-color: #1b44d6;
+}
+
+.col-flex{
+    display: flex;
+    padding: 2rem;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.circle {
+    width: 40px;
+    height: 40px;
+    background-color: #042440;
+    border-radius: 50%;
+    color: white;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.custom-table {
+    border-collapse: collapse;
+    width: 100%;
+    border-radius: 10px; /* Adjust the border radius as needed */
+    overflow: hidden; /* This is necessary to ensure curved border radius is applied */
+}
+
+.custom-table th {
+    background-color: #E6E6E6;
+    padding: 8px;
+    
+}
+
+.custom-table td {
+    padding: 8px;
+    border-bottom: 1px solid #CCCCCC; /* Grey color border below each row */
+}
+
+.custom-table th:first-child {
+    border-bottom-left-radius: 10px; /* Curved border radius for bottom-left corner of first th */
+}
+
+.custom-table th:last-child {
+    border-bottom-right-radius: 10px; /* Curved border radius for bottom-right corner of last th */
+}
+.table-container{
+    padding: 0 2rem 5rem 2rem ;
+}
+
+.search-bar{
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.filter-container{
+     padding-left: 1rem;
+}
+
+.dustbin-icon{
+    font-size: x-large;
+}
+
+.search-filter-container{
+    display: flex;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+}
+
+a{
+    text-decoration: none;
+    color: #042440;
+}
+
+a:hover{
+    color: #587AFD;
+}
+
+.dustbin-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.main-content-heading{
+    padding-left: 1rem;
+    font-size: 1.5rem;
+}
+
+.mainbox{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
