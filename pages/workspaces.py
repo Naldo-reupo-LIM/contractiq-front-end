@@ -1,42 +1,15 @@
-from dash import html, callback, Input, Output, dcc, State
+import dash
 import dash_bootstrap_components as dbc
-import dash,api_requests
+from dash import Input, Output, State, callback, dcc, html
+
+import api_requests
 from pages.workspaces_set_up import modal
-######## TABLE #########
-# Define table data
-# def generate_table(data):
-#     table_headers = [
-#         "Workspace Name",
-#         "# of Documents",
-#         "Document Types",
-#         "Created By",
-#         "Date Created",
-#         "Client Name",
-#         "Charge Code",
-#     ]
-#     table_data = [table_headers] + [
-#         [
-#             project['project_name'],
-#             "0",
-#             project['document_type'],
-#             "ABC",
-#             project['created_at'],
-#             project['client_name'],
-#             project['client_code']
-#         ]
-#         for project in data
-#     ]
 
-#     table_rows = [html.Tr([html.Td(cell) for cell in row]) for row in table_data]
-
-#     return html.Table(
-#         [html.Thead(html.Tr([html.Th(header) for header in table_headers])), html.Tbody(table_rows)],
-#         className="custom-table",
-#     )
 
 def generate_table(data):
+
     table_headers = [
-        '',
+        "",
         "Workspace Name",
         "# of Documents",
         "Document Types",
@@ -45,34 +18,51 @@ def generate_table(data):
         "Client Name",
         "Charge Code",
     ]
-    table_data =  [
+    table_data = [
         [
-            'Contract analysis',
-            '24',
-            'contract',
-            'Varun Sharma',
-            '3/10/2024',
-            'ABC Company LLC',
-            ''
+            project.get("project_name"),
+            "24",
+            project.get("document_type"),
+            project.get("user_id"),
+            project.get("project_create_date"),
+            project.get("client_name"),
+            "",
         ]
         for project in data
     ]
 
-    table_rows =[html.Tr([html.Td( dcc.Checklist(
-                options=[
-                    {"label": "", "value": '1323'}  # Assuming each project has a unique 'id'
-                ],
-                value=[],
-                id={'type': 'select-checkbox', 'index': '1323'},
-                className='workspace-checkbox'
-            ))] + [html.Td(cell) for cell in row]) for row in table_data]
+    table_rows = [
+        html.Tr(
+            [
+                html.Td(
+                    dcc.Checklist(
+                        options=[
+                            {
+                                "label": "",
+                                "value": "1323",
+                            }  # Assuming each project has a unique 'id'
+                        ],
+                        value=[],
+                        id={"type": "select-checkbox", "index": "1323"},
+                        className="workspace-checkbox",
+                    )
+                )
+            ]
+            + [html.Td(cell) for cell in row]
+        )
+        for row in table_data
+    ]
 
     return html.Table(
-        [html.Thead(html.Tr([html.Th(header) for header in table_headers])), html.Tbody(table_rows)],
+        [
+            html.Thead(html.Tr([html.Th(header) for header in table_headers])),
+            html.Tbody(table_rows),
+        ],
         className="custom-table",
     )
-######## MODELS #########
 
+
+######## MODELS #########
 
 
 # Update the sidebar with the relevant links and styling
@@ -82,7 +72,12 @@ sidebar_table = html.Div(
         html.Hr(),
         dbc.Nav(
             [
-                dbc.NavLink("Workspaces", href="/workspaces", active="exact",style = {"color":"green"}),
+                dbc.NavLink(
+                    "Workspaces",
+                    href="/workspaces",
+                    active="exact",
+                    style={"color": "green"},
+                ),
                 dbc.NavLink("Chat History", href="/chat-history", active="exact"),
                 dbc.NavLink("Manage Uploads", href="/manage-uploads", active="exact"),
                 dbc.NavLink("Account", href="/account", active="exact"),
@@ -90,10 +85,10 @@ sidebar_table = html.Div(
             ],
             vertical=True,
             pills=True,
-            className="flex-column"
+            className="flex-column",
         ),
     ],
-    className="sidebar_table"
+    className="sidebar_table",
 )
 
 layout = html.Div(
@@ -117,11 +112,10 @@ layout = html.Div(
                     ),
                 ),
                 html.H2("ContractIQ", id="contract-heading"),
-                
                 html.Div(
                     id="sidebar-content",
                     children=[
-                        html.P(html.A("Worksapces", href="/",style = {"color":"blue"})),
+                        html.P(html.A("Worksapces", href="/", style={"color": "blue"})),
                         html.P(html.A("Chat History", href="/chat_history")),
                         html.P(html.A("Manage Uploads", href="#")),
                     ],
@@ -165,20 +159,17 @@ layout = html.Div(
                         html.Div(className="circle", children="AS"),
                     ],
                 ),
-                
                 html.P(
                     "Workspaces",
                     id="main-content-heading",
                     className="main-content-heading",
                     style={
-                        'backgroundColor': '#EFEFEF', # Replace with the color you want
-                        'width': '100%',
-                        'padding': '10px 0', # Adjust the padding as needed
-                        'textAlign': 'left',
-                        
-                    }
+                        "backgroundColor": "#EFEFEF",  # Replace with the color you want
+                        "width": "100%",
+                        "padding": "10px 0",  # Adjust the padding as needed
+                        "textAlign": "left",
+                    },
                 ),
-                
                 html.P(id="main-content-text"),
                 dbc.Row(
                     id="button-container",
@@ -257,25 +248,8 @@ layout = html.Div(
                         ),
                     ],
                 ),
-                html.P(
-                    "Workspaces", style={"paddingLeft": "2rem", "fontSize": "1.25rem"}
-                ),
-                html.Div(
-                    [
-                        dbc.Row(
-                            [
-                                dbc.Col(html.Div([
-                                    
-                                    html.Div(id='table-container', children=generate_table('test'))  # Replace with actual data
-                                ]), width=10, className="content-col"),  # Adjust the width as needed
-                            ],
-                            className="g-0"  # No gutters
-                        )
-                    ],
-                    className="container-fluid main-container"
-                ),
                 html.Div(id="table-container", className="table-container"),
-                dcc.Interval(id='interval-component', interval=30000, n_intervals=0)
+                dcc.Interval(id="interval-component", interval=30000, n_intervals=0),
             ],
             className="content",
             style={"paddingLeft": "20rem", "overflow": "hidden"},
@@ -377,27 +351,47 @@ def toggle_modal(n1, n2, is_open):
     return is_open
 
 
-
 @callback(
-    Output("modal", "is_open",allow_duplicate=True),
+    Output("modal", "is_open", allow_duplicate=True),
     [Input("create-workspace-button", "n_clicks"), Input("close", "n_clicks")],
-    [State("modal", "is_open"),
-     State("workspace-name", "value"),
-     State("workspace-code", "value"),
-     State("document-type", "value"),
-     State("client-id", "value"),
-     State("client-name", "value"),
-     State("project-members", "value"),
-     State("project-description", "value")],
-      prevent_initial_call=True,
+    [
+        State("modal", "is_open"),
+        State("workspace-name", "value"),
+        State("workspace-code", "value"),
+        State("document-type", "value"),
+        State("client-id", "value"),
+        State("client-name", "value"),
+        State("project-members", "value"),
+        State("project-description", "value"),
+    ],
+    prevent_initial_call=True,
 )
-def toggle_modal_and_create_workspace(n_create_clicks, n_close_clicks, is_open, project_name,client_code, document_type, client_id,client_name, project_members, project_description):
+def toggle_modal_and_create_workspace(
+    n_create_clicks,
+    n_close_clicks,
+    is_open,
+    project_name,
+    client_code,
+    document_type,
+    client_id,
+    client_name,
+    project_members,
+    project_description,
+):
     ctx = dash.callback_context
     triggered_id = ctx.triggered[0]["prop_id"].split(".")[0]
-    
+
     if triggered_id == "create-workspace-button" and n_create_clicks:
         # Send the request to create the workspace
-        response = api_requests.create_workspace(project_name,client_code, document_type, client_id,client_name, project_members, project_description)
+        response = api_requests.create_workspace(
+            project_name,
+            client_code,
+            document_type,
+            client_id,
+            client_name,
+            project_members,
+            project_description,
+        )
         if response.status_code == 200:
             return False
 
@@ -406,9 +400,10 @@ def toggle_modal_and_create_workspace(n_create_clicks, n_close_clicks, is_open, 
 
     return is_open
 
+
 @callback(
     Output("table-container", "children"),
-    Input("content", "children")  # Triggers when content is loaded
+    Input("content", "children"),  # Triggers when content is loaded
 )
 def update_table(_):
     projects_data = api_requests.get_projects()
@@ -416,3 +411,30 @@ def update_table(_):
         return generate_table(projects_data)
     else:
         return "Failed to fetch projects data"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
