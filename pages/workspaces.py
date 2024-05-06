@@ -62,6 +62,14 @@ def generate_table(data):
     )
 
 
+def get_data():
+    projects_data = api_requests.get_projects()
+    if projects_data:
+        return generate_table(projects_data)
+    else:
+        return "Failed to fetch projects data"
+
+
 ######## MODELS #########
 
 
@@ -181,7 +189,7 @@ layout = html.Div(
                                         "Create a New Workspace",
                                         color="primary",
                                         className="sidebar-button",
-                                        id="create-workspace-button",
+                                        id="open-create-workspace-button",
                                         style={"width": "204px"},
                                     ),
                                     modal,
@@ -342,7 +350,7 @@ def navigate_to_docu_chat(n_clicks):
 
 @callback(
     Output("modal", "is_open"),
-    [Input("create-workspace-button", "n_clicks"), Input("close", "n_clicks")],
+    [Input("open-create-workspace-button", "n_clicks"), Input("close", "n_clicks")],
     [State("modal", "is_open")],
 )
 def toggle_modal(n1, n2, is_open):
@@ -353,13 +361,13 @@ def toggle_modal(n1, n2, is_open):
 
 @callback(
     Output("modal", "is_open", allow_duplicate=True),
+    Output("table-container", "children", allow_duplicate=True),
     [Input("create-workspace-button", "n_clicks"), Input("close", "n_clicks")],
     [
         State("modal", "is_open"),
         State("workspace-name", "value"),
         State("workspace-code", "value"),
         State("document-type", "value"),
-        State("client-id", "value"),
         State("client-name", "value"),
         State("project-members", "value"),
         State("project-description", "value"),
@@ -373,14 +381,14 @@ def toggle_modal_and_create_workspace(
     project_name,
     client_code,
     document_type,
-    client_id,
     client_name,
     project_members,
     project_description,
 ):
     ctx = dash.callback_context
     triggered_id = ctx.triggered[0]["prop_id"].split(".")[0]
-
+    client_id = ""
+    print(n_create_clicks)
     if triggered_id == "create-workspace-button" and n_create_clicks:
         # Send the request to create the workspace
         response = api_requests.create_workspace(
@@ -393,12 +401,12 @@ def toggle_modal_and_create_workspace(
             project_description,
         )
         if response.status_code == 200:
-            return False
+            return False, get_data()
 
     elif triggered_id == "close":
-        return False
+        return False, None
 
-    return is_open
+    return is_open, None
 
 
 @callback(
@@ -406,11 +414,33 @@ def toggle_modal_and_create_workspace(
     Input("content", "children"),  # Triggers when content is loaded
 )
 def update_table(_):
-    projects_data = api_requests.get_projects()
-    if projects_data:
-        return generate_table(projects_data)
-    else:
-        return "Failed to fetch projects data"
+    return get_data()
+
+    return get_data()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -100,9 +100,6 @@ layout = html.Div(
         ),  # Added "Contracts IQ" as a heading
         register_user_form,
         dcc.Location(id="success-url", refresh=True),
-        dbc.Alert(
-            "User register successfully", id="alert-auto", is_open=True, duration=4000
-        ),
     ],
     style={
         "display": "flex",
@@ -118,7 +115,6 @@ layout = html.Div(
 @callback(
     [
         Output("register-user-error", "children"),
-        Output("alert-auto", "is_open"),
         Output("success-url", "pathname"),
     ],
     [Input("save-button", "n_clicks")],
@@ -147,21 +143,22 @@ def register_user_callback(login_clicks, username, email, password, passwordConf
 
         regex = r"^[\w\.\+\-]+\@[\w]+\.[a-z]{2,3}$"
         if not re.fullmatch(regex, email):
-            return "Invalid email", False, None
+            return "Invalid email", None
 
         if password != passwordConfirm:
-            return "Passwords do NOT match", False, None
+            return "Passwords do NOT match", None
 
         response = api_requests.register_user(username, email, password)
         if response.status_code == 200:
             message = response.json().get("message")
             success = response.json().get("success")
             if bool(success):
-                return "", True, "/"
+                return "", "/"
             else:
-                return message, False, None
+                return message, None
 
-    return "", False, None
+    return "", None
+
 
 
 

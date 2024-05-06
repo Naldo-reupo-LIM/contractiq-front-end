@@ -112,7 +112,8 @@ def authenticate_user_callback(login_clicks, username, password):
     if button_id == "login-button" and login_clicks:
         # Make a POST request to authenticate user
         response = api_requests.authenticate_user(username, password)
-        if response.status_code == 200:
+        success = response.json().get("success")
+        if response.status_code == 200 and success:
             access_token = response.json().get("data", {}).get("access_token")
             return "", access_token, "workspaces"  # Return success message and token
         else:
@@ -128,6 +129,7 @@ def authenticate_user_callback(login_clicks, username, password):
             return "", token, "workspaces"
     else:
         return "", None, None
+
 
 
 

@@ -1,6 +1,8 @@
-from dash import html, callback, Input, Output, dcc, State
+import dash
 import dash_bootstrap_components as dbc
-import dash,api_requests
+from dash import Input, Output, State, callback, dcc, html
+
+import api_requests
 
 modal_buttons = dbc.Row(
     children=[
@@ -17,7 +19,7 @@ modal_buttons = dbc.Row(
         dbc.Col(
             dbc.Button(
                 "Create",
-                id="create",
+                id="create-workspace-button",
                 className="",
                 n_clicks=0,
                 color="primary",
@@ -88,7 +90,6 @@ modal = html.Div(
                                     ],
                                     width=4,
                                 ),
-                                
                                 dbc.Col(
                                     [
                                         html.Label("Client Name"),
@@ -100,9 +101,7 @@ modal = html.Div(
                                         ),
                                     ],
                                     width=4,
-                                    style={
-                                        "padding-left":"120px"
-                                    }
+                                    style={"padding-left": "120px"},
                                 ),
                             ],
                             className="mt-4",
@@ -113,16 +112,16 @@ modal = html.Div(
                                     [
                                         html.Label("Add Teams"),
                                         dcc.Dropdown(
-                                        id={'type': 'action-dropdown', 'index': 'id'},  # Replace with the actual identifier
-                                        options=[
-                                            {'label': 'Team 1', 'value': 'Team 1'},
-                                            {'label': 'Team 2', 'value': 'Team 2'},
-                                            {'label': 'Team 3', 'value': 'Team 3'},
-                                        ],
-                                        placeholder="Team names",
-                                        clearable=True,
-                                        style={"width": "100%"}
-                                    )
+                                            id="project-members",  # Replace with the actual identifier
+                                            options=[
+                                                {"label": "Team 1", "value": "Team 1"},
+                                                {"label": "Team 2", "value": "Team 2"},
+                                                {"label": "Team 3", "value": "Team 3"},
+                                            ],
+                                            placeholder="Team names",
+                                            clearable=True,
+                                            style={"width": "100%"},
+                                        ),
                                     ]
                                 ),
                             ],
@@ -135,7 +134,7 @@ modal = html.Div(
                                         html.Label("Project Description"),
                                         dbc.Textarea(
                                             id="project-description",
-                                            placeholder="Add text",
+                                            placeholder="Add project description",
                                             className="search-input",
                                         ),
                                     ]
@@ -154,4 +153,8 @@ modal = html.Div(
         ),
     ],
 )
+
+
+
+
 
